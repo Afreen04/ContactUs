@@ -1,0 +1,194 @@
+<html>
+
+<head>
+</head>
+<body>
+
+<!-- Jquery -->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript">
+</script>
+<script>
+$(document).ready(function(){
+	//Canvas stuff
+	var canvas = $("#canvas")[0];
+	var ctx = canvas.getContext("2d");
+	var context = canvas.getContext("2d");
+	var w = $("#canvas").width();
+	var h = $("#canvas").height();
+	
+	//Lets save the cell width in a variable for easy control
+	var cw = 10;
+	var d;
+	speed=70;
+	var length = 100; //max no of dots on screen
+	var startx=Math.random()%1200;
+	var starty=Math.random()%750;
+	var particle_speed=1;
+	var radius=10;
+	var ptrx_array=[];
+	var ptry_array=[];
+    var ptr_no=0;
+	var ptr_created=0;
+	var no_of_members=10;
+	var randplaces=[];   //array storing the random places
+	
+	window.onload = generatenamepts();	
+	
+	function init()
+	{
+		d = "left"; //default direction
+		
+		create_block1();
+		
+		//displays the score
+       	
+		if(typeof game_loop != "undefined") clearInterval(game_loop);
+		game_loop = setInterval(init,500);
+	
+	}
+	init();
+	
+	function create_block1()
+	{
+			if(typeof game_loop != "undefined") clearInterval(block1_loop);
+		block1_loop = setInterval(paint_block1, speed);
+	}
+
+	
+	function paint_block1()
+	{//we need to paint the BG on every frame
+		//Lets paint the canvas now
+		ctx.fillStyle = "black";
+		ctx.fillRect(0, 0, w, h);
+		ctx.strokeStyle = "white";
+		ctx.strokeRect(0, 0, w, h);
+	 
+		paint_cell();
+		
+
+	}
+	
+	
+	
+	//Lets first create a generic function to paint cells
+	function paint_cell(x, y,clr)
+	{
+		
+	  
+	  ctx.beginPath();                       //Mouse dot
+      context.arc(mousePos.x, mousePos.y, radius, 0, 2 * Math.PI, false);
+      ctx.fillStyle = "green";
+      ctx.fill();
+      //ctx.lineWidth = 5;
+      //context.strokeStyle = '#003300';
+      ctx.stroke();	
+	  
+	 
+
+    if(ptr_created<100)
+	 {for(var i=1;i<ptr_created;i++)
+	  {ctx.beginPath();                       //Mouse trail
+       context.moveTo(ptrx_array[i-1], ptry_array[i-1]);
+       context.lineTo(ptrx_array[i], ptry_array[i]);
+      ctx.stroke();	
+	  
+	  }
+	 
+	 }
+	 
+	 else
+	 {for(var i=1;i<100;i++)
+	  {ctx.beginPath();                       //Mouse trail
+       context.moveTo(ptrx_array[i-1], ptry_array[i-1]);
+       context.lineTo(ptrx_array[i], ptry_array[i]);
+      ctx.stroke();	
+	  
+	  
+	  }
+	 }
+	   if(!(ptr_created<100))
+	   {
+	  var x=0,j=0;
+	  for(;x<100;x++)
+	   {if(x==randplaces[j])
+	     {j++;
+		  context.arc(ptrx_array[i-x], ptry_array[i-x], 4, 0, 2 * Math.PI, false);
+          ctx.fillStyle = "blue";
+          ctx.fill();
+	      //ctx.stroke();
+		 }
+	    }
+	   }
+	}
+	
+	function create_mousearray(x,y)
+	{if(ptr_no<100)
+	  ptr_no++;
+	 ptr_created++;	
+
+	if(ptr_created<100)
+	 {ptrx_array[ptr_created]=x;                       
+      ptry_array[ptr_created]=y;                        	 //This holds y position
+	 
+	 }
+	 
+	 else
+	 {for(var i=0;i<100;i++)
+	  {ptrx_array[i]=ptrx_array[i+1];
+	   ptry_array[i]=ptry_array[i+1];
+	  }
+	  ptrx_array[i]=x;                       
+      ptry_array[i]=y;
+	 }
+	 
+	}
+	
+	
+	 function getMousePos(canvas, evt) {
+        var rect = canvas.getBoundingClientRect();
+        return {
+          x: evt.clientX - rect.left,
+          y: evt.clientY - rect.top
+        };
+      }
+	
+	
+	  
+	 canvas.addEventListener('mousemove', function(evt) {
+        mousePos = getMousePos(canvas, evt);
+        var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
+        //writeMessage(canvas, message);
+		create_mousearray(mousePos.x,mousePos.y);
+		
+		
+      }, false);
+	
+	
+
+	function generatenamepts()
+	{var i=0,j=0;
+	 var cur=0;
+	 while(j<no_of_members)
+	 {
+	 while(i<2 && i> 8)
+	  {i=Math.random()%10;}
+	  randplaces[j]=cur+10;
+	  cur=cur+10;
+	  j++;
+	 }
+	}
+	
+	
+	
+	
+	
+})
+//->
+</script>
+<canvas id="canvas" width="1500" height="750"></canvas>
+
+
+</body>
+
+
+</html>
